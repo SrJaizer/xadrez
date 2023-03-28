@@ -1,9 +1,9 @@
-<h1>XADREZ</h1>
-<h2>Requirements</h2>
-<h3>Language version (backend):</h3>
-- [Python](https://www.python.org/)3.10.9
+# XADREZ
+## Requirements
+### Language version (backend):
+- [Python](https://www.python.org/) 3.10.9
 
-<h4>Recommendations</h4>
+#### Recommendations
 <!-- https://docs.python.org/3/library/venv.html -->
 <!-- https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/ -->
 Install [Pyenv](https://realpython.com/intro-to-pyenv/#installing-pyenv) for managing multiple Python versions.
@@ -43,7 +43,7 @@ And to leave the virtual environment:
 ```bash
 deactivate
 ```
-<h4>Install/update package dependencies</h4>
+#### Install/update package dependencies
 Unix/macOS:
 ```bash
 python3 -m pip install requirements
@@ -55,10 +55,10 @@ python -m pip install requirements
 ```
 
 
-<h3>Runtime environment (frontend):</h3>
+### Runtime environment (frontend):
 - [Node](https://nodejs.org/en/download)18.15.0 LTS
 
-<h4>Recommendatios</h4>
+#### Recommendatios
 if you already have other node version(s) installed, follow the steps below:
 Install [Volta](https://docs.volta.sh/guide/getting-started) for managing multiple node versions.
 
@@ -70,19 +70,20 @@ cd web
 volta install node@18.15.0
 ```
 
-<h4>Install/update package dependencies</h4>
+#### Install/update package dependencies
+Install packages from package.json file:
 ```bash
 npm install
 ```
 
-<h2>Run application</h2>
-<h3>Backend server</h3>
+## Run application
+### Backend server
 in the server directory, type:
 ```bash
 python3.10 app.py
 ```
 
-<h3>Frontend runtime environment</h3>
+### Frontend runtime environment
 in the web directory, type:
 ```bash
 npm run dev
