@@ -1,0 +1,5 @@
+# Virtual environment directory
+proj_env/*
+
+# Python version set file
+.python-version
