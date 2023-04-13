@@ -1,44 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import io, { Socket } from 'socket.io-client';
+// import { socket } from "./lib/socket";
 
-const socket: Socket = io('http://127.0.0.1:5000');
+import { Chessboard } from "./components/Chessboard"
+
+let playerChessboardView = "white"
+let horizontalAxis = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+let verticalAxis = ['8', '7', '6', '5', '4', '3', '2', '1']
+
+// useEffect(() => {
+//   socket.on('chess_team', (msg: string) => {
+//     if (msg == "0") {
+//       playerChessboardView = "black"
+//       horizontalAxis = horizontalAxis.reverse()
+//       verticalAxis = verticalAxis.reverse()
+//     }
+//   });
+// }, []);
 
 export function App() {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>('');
-
-  useEffect(() => {
-    socket.on('message', (msg: string) => {
-      setMessages((prevMessages: string[]) => [...prevMessages, msg]);
-    });
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    socket.emit('message', inputValue);
-    setInputValue('');
-  };
 
   return (
-    <div>
-      <ul>
-        {messages.map((msg: string, index: number) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
-      <form onSubmit={handleFormSubmit}>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
+    <Chessboard 
+      playerChessboardView={playerChessboardView}
+      horizontalAxis={horizontalAxis}
+      verticalAxis={verticalAxis}
+    />
   );
 }
 
