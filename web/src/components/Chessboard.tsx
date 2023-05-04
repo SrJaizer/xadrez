@@ -1,5 +1,5 @@
 import React, { JSXElementConstructor, useEffect, useRef, useState } from "react";
-// import { socket } from "../lib/socket";
+import { socket } from "../lib/socket";
 
 import { Square } from "./Square";
 
@@ -15,7 +15,7 @@ interface ChessboardProps {
   horizontalAxis: string[];
   verticalAxis: string[];
 }
-console.log("Initial render!")
+// console.log("Initial render!")
 
 export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis }: ChessboardProps) {
   console.log("renderizei!")
@@ -28,23 +28,26 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
   const pieceImageRef = useRef("")
   const chessboardRef = useRef<HTMLDivElement>(null)
   
-  // function checkLegalMove(from: string, to: string) {
-  //   socket.emit(`${playerChessboardView}_move`, `${from}${to}`);
-  // }
+  function checkLegalMove(from: string, to: string) {
+    socket.emit(`${playerChessboardView}_move`, `${from}${to}`);
+  }
 
-  // socket.on('move', (msg: string) => {
-  //   const origin = msg.slice(0, 1)
-  //   const destination = msg.slice(2, 3)
-
-  //   updateChessboardMap(origin, destination)
-  // });
+  useEffect( () => {
+    socket.on('legal_move', (msg: string) => {
+      console.log(`server msg(legal_move): ${msg}`)
+      const origin = msg.slice(0, 2)
+      const destination = msg.slice(2, 4)
+  
+      updateChessboardMap(origin, destination)
+    });
+  }, [])
 
   function updateChessboardMap(origin: string, destination: string) {
     setChessboardMap(prevState => ({
       ...prevState,
       [origin]: undefined,
       [destination]: pieceImageRef.current,
-    }));
+    }))
   }
 
   function grabPiece(e: React.MouseEvent) {
@@ -56,7 +59,7 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
     pieceMoveOriginRef.current = getChessNotation(e, chessboardRef, axis)
     pieceImageRef.current = chessboardMap[pieceMoveOriginRef.current]!
 
-    console.log(`FROM: ${pieceMoveOriginRef.current}`)
+    // console.log(`FROM: ${pieceMoveOriginRef.current}`)
   }
   
   function movePiece(e: React.MouseEvent) {
@@ -71,16 +74,18 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
 
     const pieceMoveDestination = getChessNotation(e, chessboardRef, axis)
 
-    if (!pieceInChessboardConstraint(e, activePiece, chessboardRef) || pieceMoveOriginRef.current == pieceMoveDestination) {
+    if (!pieceInChessboardConstraint(e, activePiece, chessboardRef) || 
+        pieceMoveOriginRef.current == pieceMoveDestination ||
+        (chessboardMap[pieceMoveOriginRef.current]!)[0]!=playerChessboardView[0]) {
       resetChessPiecePosition(activePiece)
       activePiece = null
       return;
     }
     
     activePiece = null
-    updateChessboardMap(pieceMoveOriginRef.current, pieceMoveDestination)    
+    checkLegalMove(pieceMoveOriginRef.current, pieceMoveDestination)    
 
-    console.log(`TO: ${pieceMoveDestination}`)
+    // console.log(`TO: ${pieceMoveDestination}`)
   }
 
   return (
