@@ -1,7 +1,7 @@
 export function startChessboard() {
   const horizontalAxis = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] 
   const verticalAxis = [8, 7, 6, 5, 4, 3, 2, 1]
-  let chessboard: {[key: string]: string | undefined} = {};
+  let chessboard: {[key: string]: string | null} = {};
     
     
   const colors = ['b', 'w']
@@ -34,10 +34,10 @@ export function startChessboard() {
     }
   }
 
-  //  void tiles
+  //  void squares
   for (let y = 6; y > 2; y--) {
     for (let x of horizontalAxis) {
-      chessboard[`${x}${y}`] = undefined
+      chessboard[`${x}${y}`] = null
     }
   }
 

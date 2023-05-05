@@ -2,7 +2,7 @@ import "./../styles/Square.css"
 
 interface SquareProps {
   color: string;
-  image?: string;
+  image: string|null;
 }
 
 export function Square({ color, image }: SquareProps) {

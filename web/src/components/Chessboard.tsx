@@ -8,7 +8,7 @@ import { centerElementOnCursor, getChessNotation, pieceInChessboardConstraint, r
 
 import "./../styles/Chessboard.css";
 
-let initialChessboardMap: {[key: string]: string | undefined} = startChessboard()
+let initialChessboardMap: {[key: string]: string | null} = startChessboard()
 
 interface ChessboardProps {
   playerChessboardView: string;
@@ -20,11 +20,12 @@ interface ChessboardProps {
 export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis }: ChessboardProps) {
   console.log("renderizei!")
   const axis = {horizontalAxis, verticalAxis}
-  const [chessboardMap, setChessboardMap] = useState<{[key: string]: string | undefined}>(initialChessboardMap)
+  const [chessboardMap, setChessboardMap] = useState<{[key: string]: string | null}>(initialChessboardMap)
   
   let activePiece: HTMLElement | null = null;
   
   const pieceMoveOriginRef = useRef("")
+  const pieceMoveDestinationRef = useRef("")
   const pieceImageRef = useRef("")
   const chessboardRef = useRef<HTMLDivElement>(null)
   
@@ -45,7 +46,7 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
   function updateChessboardMap(origin: string, destination: string) {
     setChessboardMap(prevState => ({
       ...prevState,
-      [origin]: undefined,
+      [origin]: null,
       [destination]: pieceImageRef.current,
     }))
   }
@@ -72,10 +73,10 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
   function dropPiece(e: React.MouseEvent) {
     if (!activePiece) return;
 
-    const pieceMoveDestination = getChessNotation(e, chessboardRef, axis)
+    pieceMoveDestinationRef.current = getChessNotation(e, chessboardRef, axis)
 
     if (!pieceInChessboardConstraint(e, activePiece, chessboardRef) || 
-        pieceMoveOriginRef.current == pieceMoveDestination ||
+        pieceMoveOriginRef.current == pieceMoveDestinationRef.current ||
         (chessboardMap[pieceMoveOriginRef.current]!)[0]!=playerChessboardView[0]) {
       resetChessPiecePosition(activePiece)
       activePiece = null
@@ -83,7 +84,7 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
     }
     
     activePiece = null
-    checkLegalMove(pieceMoveOriginRef.current, pieceMoveDestination)    
+    checkLegalMove(pieceMoveOriginRef.current, pieceMoveDestinationRef.current)    
 
     // console.log(`TO: ${pieceMoveDestination}`)
   }
@@ -100,9 +101,11 @@ export function Chessboard({ playerChessboardView, horizontalAxis, verticalAxis 
         verticalAxis.map((y, yIndex) =>
           horizontalAxis.map((x, xIndex) => {
             const coordinates: string = `${x}${y}` 
-            const colorSquare = ((yIndex + xIndex) % 2 === 0) ? "black" : "white";
-            const chessPieceImage: string|undefined = chessboardMap[coordinates]
-    
+            let colorSquare = ((yIndex + xIndex) % 2 === 0) ? "black" : "white";
+            const chessPieceImage: string|null = chessboardMap[coordinates]
+            
+            if (coordinates === pieceMoveOriginRef.current ||
+              coordinates === pieceMoveDestinationRef.current) colorSquare = "marked"
             return (
               <Square 
                 key={coordinates} 

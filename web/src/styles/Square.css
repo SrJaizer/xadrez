@@ -9,11 +9,15 @@
 }
 
 .black-square {
-  background-color: #777777;
+  background-color: #042F66;
 }
 
 .white-square {
-  background-color: #1C1E2B;
+  background-color: #B3B3B3;
+}
+
+.marked-square {
+  background-color: #CC8C12
 }
 
 .square .chess-piece {
