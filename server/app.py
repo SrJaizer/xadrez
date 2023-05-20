@@ -75,6 +75,6 @@ def verificar_estado(sid):
 
 
 if __name__ == '__main__':
-    port = 5000;
+    port = 5000
     print(f'Starting on port {port}')
     eventlet.wsgi.server(eventlet.listen(('localhost', port)), app)
